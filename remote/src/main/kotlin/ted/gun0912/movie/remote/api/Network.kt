@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ted.gun0912.movie.common.extension.gson
+import ted.gun0912.movie.remote.api.interceptor.NetworkLoggingInterceptor
 import ted.gun0912.movie.remote.api.interceptor.RequestHeaderInterceptor
 import java.util.concurrent.TimeUnit
 
@@ -15,6 +16,7 @@ fun createApiService(baseUrl: String): ApiService {
         writeTimeout(TIME_OUT.toLong(), TimeUnit.SECONDS)
         connectTimeout(TIME_OUT.toLong(), TimeUnit.SECONDS)
 
+        addNetworkInterceptor(NetworkLoggingInterceptor())
         addNetworkInterceptor(RequestHeaderInterceptor())
 
     }.build()
