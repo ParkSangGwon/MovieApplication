@@ -2,10 +2,14 @@ package ted.gun0912.movie.domain.usecase
 
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -38,13 +42,13 @@ class GetActorListUseCaseTest {
         // Given
         val movieId = 0
 
-        val mockCompanies = listOf(
+        val mockActors = listOf(
             SummaryActor(1, "Actor Name", "Mafia", 1.0f, null, "url")
         )
 
         coEvery { movieRepository.getActors(movieId) } returns flowOf(
             DataResource.success(
-                mockCompanies
+                mockActors
             )
         )
 
@@ -53,7 +57,7 @@ class GetActorListUseCaseTest {
 
         // Then
         assert(result is DataResource.Success)
-        assertEquals(mockCompanies, (result as DataResource.Success).data)
+        assertEquals(mockActors, (result as DataResource.Success).data)
     }
 
     @Test
@@ -62,13 +66,18 @@ class GetActorListUseCaseTest {
         val movieId = 0
         val exception = Exception("Human Error")
 
-        coEvery { movieRepository.getActors(movieId) } returns flowOf(DataResource.error(exception))
+        every { movieRepository.getActors(movieId) } returns flow {
+            emit(DataResource.Loading())
+            emit(DataResource.Error(exception))
+        }
 
         // When
-        val result = getActorListUseCase(movieId).first()
+        val result = getActorListUseCase(movieId)
+            .drop(1)
+            .first()
 
         // Then
-        assert(result is DataResource.Error)
+        assertTrue(result is DataResource.Error)
         assertEquals(exception, (result as DataResource.Error).throwable)
     }
 
