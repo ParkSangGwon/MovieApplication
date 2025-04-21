@@ -35,6 +35,10 @@ https://github.com/user-attachments/assets/e5f25ffb-e218-4e0b-b156-1be8fcd36873
 ### API KEY
 이 영화 프로젝트 앱을 실행하기 위해서는 [TMDB API Key](https://developer.themoviedb.org/reference/intro/getting-started)를 발급받아서 설정해야 합니다.
 
+<img width="700" alt="Image" src="https://github.com/user-attachments/assets/cb5c7c84-8cfc-4a1f-8725-2de19ce7a0be" />
+
+> 주의 API 키가 아니라 API 읽기 엑세스 토큰을 사용해야 합니다.
+
 - `local.properties` file에 발급받은 API Key를 입력해주세요
 ```properties
 api_key=<발급받은 TMDB API KEY>
